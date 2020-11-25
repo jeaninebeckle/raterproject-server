@@ -1,0 +1,38 @@
+[
+  {
+      "model": "raterprojectapi.designer",
+      "pk": 1,
+      "fields": {
+          "name": "Shigeru Miyamoto"
+      }
+  },
+  {
+      "model": "raterprojectapi.designer",
+      "pk": 2,
+      "fields": {
+          "name": "Alfred Butts"
+      }
+  },
+  {
+      "model": "raterprojectapi.designer",
+      "pk": 3,
+      "fields": {
+          "name": "Skip Williams"
+      }
+  },
+  {
+      "model": "raterprojectapi.designer",
+      "pk": 4,
+      "fields": {
+          "name": "Alan R. Moon"
+      }
+  },
+  {
+      "model": "raterprojectapi.designer",
+      "pk": 5,
+      "fields": {
+          "name": "Sid Meier"
+      }
+  }
+
+]
