@@ -1,0 +1,44 @@
+[
+  {
+      "model": "raterprojectapi.game",
+      "pk": 1,
+      "fields": {
+          "title": "Breath of the Wild",
+          "description": "Nintendo game in the Legend of Zelda series",
+          "year_released": 2017,
+          "number_of_players": 1,
+          "est_time_to_play": 100,
+          "age_recommendation": 10,
+          "game_image": "https://upload.wikimedia.org/wikipedia/en/c/c6/The_Legend_of_Zelda_Breath_of_the_Wild.jpg",
+          "designer_id": 1
+      }
+  },
+  {
+      "model": "raterprojectapi.game",
+      "pk": 2,
+      "fields": {
+          "title": "Scrabble",
+          "description": "Board game to spell words with letter tiles",
+          "year_released": 1938,
+          "number_of_players": 4,
+          "est_time_to_play": 2,
+          "age_recommendation": 10,
+          "game_image": "http://www.donaldsauter.com/1989-mb-box.jpg",
+          "designer_id": 1
+    }
+  },
+  {
+    "model": "raterprojectapi.game",
+    "pk": 3,
+    "fields": {
+        "title": "Ticket to Ride",
+        "description": "A cross-country train adventure game",
+        "year_released": 2004,
+        "number_of_players": 5,
+        "est_time_to_play": 2,
+        "age_recommendation": 8,
+        "game_image": "http://www.donaldsauter.com/1989-mb-box.jpg",
+        "designer_id": 4
+    }
+  }
+]
