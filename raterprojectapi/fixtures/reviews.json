@@ -1,0 +1,29 @@
+[
+  {
+      "model": "raterprojectapi.review",
+      "pk": 1,
+      "fields": {
+          "description": "Qeynos is a bit more welcoming to me lately, always optimistic, while Freeport has a lot of sinister stories. I also had a pop at the jumping puzzle near the start and boy did it frustrate the bejesus out of me! I SWTOR now has three raids: Eternity Vault, Karagga's Palace, and Explosive Conflict. Most likely this means that you received a fraudulent code from a third-party seller. And I’m still playing EQ2 here and there and looking forward to Vanguard’s f2p move set for some time in August. I could hold Draenei Ruins and see across to Blood Elf Tower and freak out the offense.",
+          "game": 1,
+          "player": 3
+      }
+  },
+  {
+      "model": "raterprojectapi.review",
+      "pk": 2,
+      "fields": {
+          "description": "Of course, I learned a couple of days before BWE3 that Jennifer Hale is voicing the sylvari female — that’s Commander Shepard from the Mass Effect trilogy. It struck me the other day, that the idea of not getting her to the new level cap just feels…wrong. This probably is the most 'normal' character of the three. Then my enemies are on me like white on rice. I really liked the amount of customization that they allow in the creation process. You could apply the same thing to the Mass effect 3 ending as well. Another great update for MMO fans, this time bringing mounted combat to Lord of the Rings Online. Should be fun.",
+          "game": 2,
+          "player": 1
+      }
+  },
+  {
+      "model": "raterprojectapi.review",
+      "pk": 3,
+      "fields": {
+        "description": "DDO solved the problem by making casters ludicrously more powerful than melee, and seemingly giving every boss a massive unavoidable AoE knockdown in order to punish anyone daring to get into melee range. At each newly arrived star system there are a number of things to do. I’ve previously talked about the true dynamic nature of WH space in EVE, and I want to use last weekends Op as a backdrop to sum that thought up and perhaps add some clarity to it as well. Qeynos is a bit more welcoming to me lately, always optimistic, while Freeport has a lot of sinister stories.",
+        "game": 3,
+        "player": 2
+      }
+  }
+]
