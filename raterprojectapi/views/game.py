@@ -18,18 +18,17 @@ class Games(ViewSet):
             Response -- JSON serialized game instance
         """
 
-        player = Player.objects.get(user=request.auth.user)
+        # player = Player.objects.get(user=request.auth.user)
 
         game = Game()
         game.title = request.data["title"]
-        game.designer_id = request.data["designerId"]
         game.number_of_players = request.data["numberOfPlayers"]
         game.est_time_to_play = request.data["estimatedTimeToPlay"]
         game.age_recommendation = request.data["ageRecommendation"]
         game.game_image = request.data["gameImage"]
 
         designer = Designer.objects.get(pk=request.data["designerId"]) 
-        game.designer = designer
+        game.designer_id = designer
 
         try:
             game.save()
@@ -121,5 +120,5 @@ class GameSerializer(serializers.HyperlinkedModelSerializer):
             view_name='game',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'title', 'description', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image')
+        fields = ('id', 'url', 'title', 'description', 'designer_id', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image')
         # depth = 1
