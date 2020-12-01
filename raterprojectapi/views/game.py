@@ -27,6 +27,7 @@ class Games(ViewSet):
         game.age_recommendation = request.data["ageRecommendation"]
         game.game_image = request.data["gameImage"]
         game.designer = request.data["designer"]
+        game.year_released = request.data["yearReleased"]
 
 
         try:
