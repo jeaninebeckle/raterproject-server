@@ -6,7 +6,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from raterprojectapi.models import Game, Player, Designer
+from raterprojectapi.models import Game, Player
 
 class Games(ViewSet):
     """Level up games"""
@@ -26,9 +26,8 @@ class Games(ViewSet):
         game.est_time_to_play = request.data["estimatedTimeToPlay"]
         game.age_recommendation = request.data["ageRecommendation"]
         game.game_image = request.data["gameImage"]
+        game.designer = request.data["designer"]
 
-        designer = Designer.objects.get(pk=request.data["designerId"]) 
-        game.designer_id = designer
 
         try:
             game.save()
@@ -100,13 +99,10 @@ class Games(ViewSet):
         """
         games = Game.objects.all()
 
-        designer = self.request.query_params.get('type', None)
-        if designer is not None:
-            games = games.filter(designer__id=designer)
-
         serializer = GameSerializer(
             games, many=True, context={'request': request})
         return Response(serializer.data)
+
 
 class GameSerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for games
@@ -114,11 +110,12 @@ class GameSerializer(serializers.HyperlinkedModelSerializer):
     Arguments:
         serializer type
     """
+
     class Meta:
         model = Game
         url = serializers.HyperlinkedIdentityField(
             view_name='game',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'title', 'description', 'designer_id', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image')
-        depth = 1
+        fields = ('id', 'url', 'title', 'description', 'designer', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image')
+        # depth = 1
