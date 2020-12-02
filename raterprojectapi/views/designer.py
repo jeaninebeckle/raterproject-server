@@ -16,8 +16,8 @@ class Designers(ViewSet):
             Response -- JSON serialized designer
         """
         try:
-            game_type = Designer.objects.get(pk=pk)
-            serializer = DesignerSerializer(game_type, context={'request': request})
+            designer = Designer.objects.get(pk=pk)
+            serializer = DesignerSerializer(designer, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)

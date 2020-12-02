@@ -1,4 +1,5 @@
 """View module for handling requests about games"""
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from rest_framework import status
 from django.http import HttpResponseServerError
@@ -6,33 +7,31 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from raterprojectapi.models import Game, Player
+from raterprojectapi.models import Review, Game, Player
 
-class Games(ViewSet):
-    """Level up games"""
+class Reviews(ViewSet):
+
 
     def create(self, request):
         """Handle POST operations
 
         Returns:
-            Response -- JSON serialized game instance
+            Response -- JSON serialized review instance
         """
 
-        # player = Player.objects.get(user=request.auth.user)
+        player = Player.objects.get(user=request.auth.user)
 
-        game = Game()
-        game.title = request.data["title"]
-        game.number_of_players = request.data["numberOfPlayers"]
-        game.est_time_to_play = request.data["estimatedTimeToPlay"]
-        game.age_recommendation = request.data["ageRecommendation"]
-        game.game_image = request.data["gameImage"]
-        game.designer = request.data["designer"]
-        game.year_released = request.data["yearReleased"]
+        review = Review()
+        review.description = request.data["description"]
 
+        game = Game.objects.get(pk=request.data["gameId"]) 
+        review.game_id = game
+
+        review.player_id = player
 
         try:
-            game.save()
-            serializer = GameSerializer(game, context={'request': request})
+            review.save()
+            serializer = ReviewSerializer(review, context={'request': request})
             return Response(serializer.data)
 
         except ValidationError as ex:
@@ -41,14 +40,10 @@ class Games(ViewSet):
 
 
     def retrieve(self, request, pk=None):
-        """Handle GET requests for single game
 
-        Returns:
-            Response -- JSON serialized game instance
-        """
         try:
-            game = Game.objects.get(pk=pk)
-            serializer = GameSerializer(game, context={'request': request})
+            review = Review.objects.get(pk=pk)
+            serializer = ReviewSerializer(review, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -81,42 +76,62 @@ class Games(ViewSet):
             Response -- 200, 404, or 500 status code
         """
         try:
-            game = Game.objects.get(pk=pk)
-            game.delete()
+            review = Review.objects.get(pk=pk)
+            review.delete()
 
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-        except Game.DoesNotExist as ex:
+        except Review.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def list(self, request):
-        """Handle GET requests to games resource
 
-        Returns:
-            Response -- JSON serialized list of games
-        """
-        games = Game.objects.all()
+        reviews = Review.objects.all()
 
-        serializer = GameSerializer(
-            games, many=True, context={'request': request})
+        game = self.request.query_params.get('game', None)
+        if game is not None:
+            reviews = reviews.filter(game__id=game)
+
+        serializer = ReviewSerializer(
+            reviews, many=True, context={'request': request})
         return Response(serializer.data)
 
-
-class GameSerializer(serializers.ModelSerializer):
-    """JSON serializer for games
+class ReviewSerializer(serializers.HyperlinkedModelSerializer):
+    """JSON serializer for reviews
 
     Arguments:
         serializer type
     """
-
     class Meta:
-        model = Game
+        model = Review
         url = serializers.HyperlinkedIdentityField(
-            view_name='game',
+            view_name='review',
             lookup_field='id'
         )
-        fields = ('id', 'reviews', 'url', 'title', 'description', 'designer', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image')
+        fields = ('id', 'url', 'description')
+        # depth = 1
+
+class ReviewUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for review player's related Django user"""
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
+
+class ReviewPlayerSerializer(serializers.ModelSerializer):
+    """JSON serializer for review player"""
+    user = ReviewUserSerializer(many=False)
+
+    class Meta:
+        model = Player
+        fields = ['user', 'game_id', 'player_id']
+
+class GameSerializer(serializers.HyperlinkedModelSerializer):
+    """JSON serializer for games"""
+    class Meta:
+        model = Game
+        fields = ('id', 'url', 'title', 'description', 'designer_id', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image')
         depth = 1
