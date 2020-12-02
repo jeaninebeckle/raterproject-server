@@ -27,6 +27,8 @@ class Reviews(ViewSet):
         game = Game.objects.get(pk=request.data["gameId"]) 
         review.game_id = game
 
+        review.player_id = player
+
         try:
             review.save()
             serializer = ReviewSerializer(review, context={'request': request})
@@ -125,7 +127,7 @@ class ReviewPlayerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Player
-        fields = ['user']
+        fields = ['user', 'game_id', 'player_id']
 
 class GameSerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for games"""

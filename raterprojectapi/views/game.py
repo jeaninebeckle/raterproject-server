@@ -105,7 +105,7 @@ class Games(ViewSet):
         return Response(serializer.data)
 
 
-class GameSerializer(serializers.HyperlinkedModelSerializer):
+class GameSerializer(serializers.ModelSerializer):
     """JSON serializer for games
 
     Arguments:
@@ -118,5 +118,5 @@ class GameSerializer(serializers.HyperlinkedModelSerializer):
             view_name='game',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'title', 'description', 'designer', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image')
-        # depth = 1
+        fields = ('id', 'reviews', 'url', 'title', 'description', 'designer', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image')
+        depth = 1
