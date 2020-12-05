@@ -1,4 +1,3 @@
-from raterprojectapi.models import designer
 from django.db import models
 
 class Game(models.Model):
