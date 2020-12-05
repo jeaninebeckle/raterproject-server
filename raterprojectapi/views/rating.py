@@ -40,7 +40,7 @@ class Ratings(ViewSet):
 
 
     def retrieve(self, request, pk=None):
-
+        # for single thing
         try:
             rating = Rating.objects.get(pk=pk)
             serializer = RatingSerializer(rating, context={'request': request})
@@ -50,12 +50,14 @@ class Ratings(ViewSet):
 
 
     def list(self, request):
-
+        # for all things
         ratings = Rating.objects.all()
 
         game = self.request.query_params.get('game', None)
         if game is not None:
-            reviews = ratings.filter(game__id=game)
+            ratings = ratings.filter(game__id=game)
+            print(ratings)
+            
 
         serializer = RatingSerializer(
             ratings, many=True, context={'request': request})
@@ -91,9 +93,9 @@ class RatingPlayerSerializer(serializers.ModelSerializer):
         model = Player
         fields = ['user']
 
-class GameSerializer(serializers.HyperlinkedModelSerializer):
-    """JSON serializer for games"""
-    class Meta:
-        model = Game
-        fields = ('id', 'url', 'title', 'description', 'designer_id', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image', 'rating')
-        depth = 1
+# class GameSerializer(serializers.HyperlinkedModelSerializer):
+#     """JSON serializer for games"""
+#     class Meta:
+#         model = Game
+#         fields = ('id', 'url', 'title', 'description', 'designer_id', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image', 'average_rating')
+#         depth = 1

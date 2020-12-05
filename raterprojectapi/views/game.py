@@ -53,44 +53,6 @@ class Games(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
-    # def update(self, request, pk=None):
-    #     """Handle PUT requests for a game
-
-    #     Returns:
-    #         Response -- Empty body with 204 status code
-    #     """
-    #     gamer = Player.objects.get(user=request.auth.user)
-
-    #     game = Game.objects.get(pk=pk)
-    #     game.title = request.data["title"]
-    #     game.maker = request.data["maker"]
-    #     game.number_of_players = request.data["numberOfPlayers"]
-    #     game.skill_level = request.data["skillLevel"]
-    #     game.gamer = gamer
-
-    #     category = Category.objects.get(pk=request.data["categoryId"])
-    #     game.gametype = gametype
-    #     game.save()
-
-    #     return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-    def destroy(self, request, pk=None):
-        """Handle DELETE requests for a single game
-
-        Returns:
-            Response -- 200, 404, or 500 status code
-        """
-        try:
-            game = Game.objects.get(pk=pk)
-            game.delete()
-
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-        except Game.DoesNotExist as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
-
-        except Exception as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def list(self, request):
         """Handle GET requests to games resource
@@ -118,5 +80,5 @@ class GameSerializer(serializers.ModelSerializer):
             view_name='game',
             lookup_field='id'
         )
-        fields = ('id', 'reviews', 'url', 'title', 'description', 'designer', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image')
+        fields = ('id', 'reviews', 'url', 'title', 'description', 'designer', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image', 'average_rating')
         depth = 1
