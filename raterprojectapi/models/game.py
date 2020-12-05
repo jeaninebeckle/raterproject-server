@@ -1,4 +1,4 @@
-from raterprojectapi.models import designer
+from raterprojectapi.views.rating import Ratings
 from django.db import models
 
 class Game(models.Model):
@@ -10,3 +10,17 @@ class Game(models.Model):
     age_recommendation = models.IntegerField()
     game_image = models.CharField(max_length=100)
     designer = models.CharField(max_length=75, default='') 
+
+
+    @property
+    def average_rating(self):
+        """Average rating calculated attribute for each game"""
+        ratings = Ratings.objects.filter(game=self)
+
+        # Sum all of the ratings for the game
+        total_rating = 0
+        for rating in ratings:
+            total_rating += rating.rating
+
+        # Calculate the averge and return it.
+        average = sum(total_rating) / len(total_rating)

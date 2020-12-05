@@ -118,5 +118,5 @@ class GameSerializer(serializers.ModelSerializer):
             view_name='game',
             lookup_field='id'
         )
-        fields = ('id', 'reviews', 'url', 'title', 'description', 'designer', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image')
+        fields = ('id', 'reviews', 'url', 'title', 'description', 'designer', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image', 'rating')
         depth = 1
