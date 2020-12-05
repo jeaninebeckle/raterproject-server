@@ -73,23 +73,23 @@ class RatingSerializer(serializers.HyperlinkedModelSerializer):
             view_name='review',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'description')
+        fields = ('id', 'url', 'value')
         # depth = 1
 
-class ReviewUserSerializer(serializers.ModelSerializer):
+class RatingUserSerializer(serializers.ModelSerializer):
     """JSON serializer for review player's related Django user"""
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
 
 
-class ReviewPlayerSerializer(serializers.ModelSerializer):
+class RatingPlayerSerializer(serializers.ModelSerializer):
     """JSON serializer for review player"""
-    user = ReviewUserSerializer(many=False)
+    user = RatingUserSerializer(many=False)
 
     class Meta:
         model = Player
-        fields = ['user', 'game_id', 'player_id']
+        fields = ['user']
 
 class GameSerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for games"""
