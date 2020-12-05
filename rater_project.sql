@@ -1,1 +1,1 @@
-SELECT * from raterprojectapi_player
+SELECT * from raterprojectapi_rating
