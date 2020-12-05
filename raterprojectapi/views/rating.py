@@ -1,4 +1,4 @@
-"""View module for handling requests about games"""
+"""View module for handling requests about ratings"""
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from rest_framework import status
@@ -95,5 +95,5 @@ class GameSerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for games"""
     class Meta:
         model = Game
-        fields = ('id', 'url', 'title', 'description', 'designer_id', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image')
+        fields = ('id', 'url', 'title', 'description', 'designer_id', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image', 'rating')
         depth = 1

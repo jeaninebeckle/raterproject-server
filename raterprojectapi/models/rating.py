@@ -6,6 +6,3 @@ class Rating(models.Model):
     game = models.ForeignKey("Game", on_delete=CASCADE, related_name="ratings", related_query_name="rating")
     player = models.ForeignKey("Player", on_delete=CASCADE, related_name="ratings", related_query_name="rating")
 
-# @property
-# def average(self):
-#     return sum(self.value) / len(self.value)

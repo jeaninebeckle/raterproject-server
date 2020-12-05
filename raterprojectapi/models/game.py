@@ -1,5 +1,5 @@
-# from raterprojectapi.views.rating import Ratings
 from django.db import models
+from raterprojectapi.models.rating import Rating
 
 class Game(models.Model):
     title = models.CharField(max_length=75)
@@ -13,16 +13,16 @@ class Game(models.Model):
     category = models.ManyToManyField
 
 
-    # @property
-    # def average_rating(self):
-    #     """Average rating calculated attribute for each game"""
-    #     ratings = Ratings.objects.filter(game=self)
+    @property
+    def average_rating(self):
+        """Average rating calculated attribute for each game"""
+        ratings = Rating.objects.filter(game=self)
 
-    #     # Sum all of the ratings for the game
-    #     total_rating = 0
-    #     for rating in ratings:
-    #         total_rating += rating.rating
+        # Sum all of the ratings for the game
+        total_rating = 0
+        for rating in ratings:
+            total_rating += rating.rating
 
-    #     # Calculate the averge and return it.
-    #     average = sum(total_rating) / len(total_rating)
-    #     return average
+        # Calculate the averge and return it.
+        average = sum(total_rating) / len(total_rating)
+        return average
