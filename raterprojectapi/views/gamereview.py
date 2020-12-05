@@ -25,9 +25,9 @@ class Reviews(ViewSet):
         review.description = request.data["description"]
 
         game = Game.objects.get(pk=request.data["gameId"]) 
-        review.game_id = game
+        review.game = game
 
-        review.player_id = player
+        review.player = player
 
         try:
             review.save()
