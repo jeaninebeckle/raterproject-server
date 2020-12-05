@@ -87,6 +87,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'raterproject.wsgi.application'
 
+MEDIA_ROOT = 'media'
+MEDIA_URL = '/media/'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

@@ -29,8 +29,6 @@ class Reviews(ViewSet):
 
         review.player = player
 
-        
-
         try:
             review.save()
             serializer = ReviewSerializer(review, context={'request': request})
