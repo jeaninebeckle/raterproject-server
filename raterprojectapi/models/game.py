@@ -24,3 +24,4 @@ class Game(models.Model):
 
         # Calculate the averge and return it.
         average = sum(total_rating) / len(total_rating)
+        return average
