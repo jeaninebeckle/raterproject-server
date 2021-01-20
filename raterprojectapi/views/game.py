@@ -81,6 +81,26 @@ class Games(ViewSet):
             games, many=True, context={'request': request})
         return Response(serializer.data)
 
+    def update(self, request, pk=None):
+        """Handle PUT requests for a game
+
+        Returns:
+            Response -- Empty body with 204 status code
+        """
+        game = Game.objects.get(pk=pk)
+        game.title = request.data["title"]
+        game.description = request.data["description"]
+        game.year_released = request.data["year_released"]
+        game.number_of_players = request.data["number_of_players"]
+        game.est_time_to_play = request.data["est_time_to_play"]
+        game.age_recommendation = request.data["age_recommendation"]
+        game.designer = request.data["designer"]
+
+        game.save()
+
+        # 204 status code means everything worked but the
+        # server is not sending back any data in the response
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 class GameSerializer(serializers.ModelSerializer):
     """JSON serializer for games
