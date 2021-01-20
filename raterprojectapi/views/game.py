@@ -70,8 +70,13 @@ class Games(ViewSet):
                 Q(description__contains=search_text) |
                 Q(designer__contains=search_text)
             )
-            
 
+        select_text = self.request.query_params.get('orderby', None)
+        if select_text is not None:
+            games = games.order_by(select_text)
+
+        # add a try and except for field error
+        
         serializer = GameSerializer(
             games, many=True, context={'request': request})
         return Response(serializer.data)
