@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from raterprojectapi.models import Game, Player
+from django.db.models import Q
 
 class Games(ViewSet):
     """Level up games"""
@@ -61,6 +62,15 @@ class Games(ViewSet):
             Response -- JSON serialized list of games
         """
         games = Game.objects.all()
+
+        search_text = self.request.query_params.get('q', None)
+        if search_text is not None:
+            games = games.filter(
+                Q(title__contains=search_text) |
+                Q(description__contains=search_text) |
+                Q(designer__contains=search_text)
+            )
+            
 
         serializer = GameSerializer(
             games, many=True, context={'request': request})
