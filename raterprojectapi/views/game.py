@@ -6,7 +6,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from raterprojectapi.models import Game, Player
+from raterprojectapi.models import Game, Categories
 from django.db.models import Q
 
 class Games(ViewSet):
@@ -19,8 +19,6 @@ class Games(ViewSet):
             Response -- JSON serialized game instance
         """
 
-        # player = Player.objects.get(user=request.auth.user)
-
         game = Game()
         game.title = request.data["title"]
         game.number_of_players = request.data["numberOfPlayers"]
@@ -29,6 +27,8 @@ class Games(ViewSet):
         game.game_image = request.data["gameImage"]
         game.designer = request.data["designer"]
         game.year_released = request.data["yearReleased"]
+        categories = Categories.objects.get(pk=request.data["categoryId"])
+        game.categories = categories
 
 
         try:
@@ -90,11 +90,12 @@ class Games(ViewSet):
         game = Game.objects.get(pk=pk)
         game.title = request.data["title"]
         game.description = request.data["description"]
-        game.year_released = request.data["year_released"]
-        game.number_of_players = request.data["number_of_players"]
-        game.est_time_to_play = request.data["est_time_to_play"]
-        game.age_recommendation = request.data["age_recommendation"]
+        game.year_released = request.data["yearReleased"]
+        game.number_of_players = request.data["numberOfPlayers"]
+        game.est_time_to_play = request.data["estimatedTimeToPlay"]
+        game.age_recommendation = request.data["ageRecommendation"]
         game.designer = request.data["designer"]
+        game.categories = request.data["categories"]
 
         game.save()
 
@@ -102,18 +103,19 @@ class Games(ViewSet):
         # server is not sending back any data in the response
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categories
+        fields = ('id', 'url', 'label')
+
 class GameSerializer(serializers.ModelSerializer):
-    """JSON serializer for games
-
-    Arguments:
-        serializer type
-    """
-
     class Meta:
         model = Game
+        categories = CategorySerializer(many=True)
         url = serializers.HyperlinkedIdentityField(
             view_name='game',
             lookup_field='id'
         )
-        fields = ('id', 'reviews', 'url', 'title', 'description', 'designer', 'year_released', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image', 'average_rating')
-        depth = 1
+        fields = ('id', 'reviews', 'url', 'title', 'description', 'designer', 'year_released', 'categories', 'number_of_players', 'est_time_to_play', 'age_recommendation', 'game_image', 'average_rating')
+        depth = 2
