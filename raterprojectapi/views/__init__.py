@@ -4,3 +4,4 @@ from .game import Games
 from .category import Categories
 from .gamereview import Reviews
 from .rating import Ratings
+from .gamepicture import GamePictures

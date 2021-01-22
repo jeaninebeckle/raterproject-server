@@ -8,7 +8,6 @@ class Game(models.Model):
     number_of_players = models.IntegerField()
     est_time_to_play = models.IntegerField()
     age_recommendation = models.IntegerField()
-    game_image = models.CharField(max_length=100)
     designer = models.CharField(max_length=75, default='')
     categories = models.ManyToManyField("Categories", related_name="categories", related_query_name="category")
  

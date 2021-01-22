@@ -1,8 +1,8 @@
-"""View module for handling requests about games"""
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 import uuid
 import base64
+from rest_framework.decorators import action
 from django.core.files.base import ContentFile
 from rest_framework import status
 from django.http import HttpResponseServerError
@@ -17,11 +17,6 @@ class GamePictures(ViewSet):
 
 
     def create(self, request):
-        """Handle POST operations
-
-        Returns:
-            Response -- JSON serialized image instance
-        """
 
         game_picture=GamePicture()
 
@@ -30,6 +25,8 @@ class GamePictures(ViewSet):
         data = ContentFile(base64.b64decode(imgstr), name=f'{request.data["gameId"]}-{uuid.uuid4()}.{ext}')
 
         game_picture.action_pic = data
+        game = Game.objects.get(pk=request.data["gameId"])
+        game_picture.game = game
 
         # Give the image property of your game picture instance a value
         # For example, if you named your property `action_pic`, then
@@ -47,38 +44,11 @@ class GamePictures(ViewSet):
             return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-    def retrieve(self, request, pk=None):
-
-        try:
-            game_picture = GamePicture.objects.get(pk=pk)
-            serializer = GamePictureSerializer(game_picture, context={'request': request})
-            return Response(serializer.data)
-        except Exception as ex:
-            return HttpResponseServerError(ex)
-
-
-    def list(self, request):
-
-        game_pictures = GamePicture.objects.all()
-
-        game = self.request.query_params.get('game', None)
-        if game is not None:
-            game_pictures = game_pictures.filter(game__id=game)
-
-        serializer = GamePictureSerializer(
-            game_pictures, many=True, context={'request': request})
-        return Response(serializer.data)
-
-class GamePictureSerializer(serializers.HyperlinkedModelSerializer):
+class GamePictureSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = GamePicture
-        url = serializers.HyperlinkedIdentityField(
-            view_name='gamepicture',
-            lookup_field='id'
-        )
-        fields = ('id', 'url', 'action_pic')
+        fields = ('id', 'game', 'action_pic')
 
 
 # class GameSerializer(serializers.HyperlinkedModelSerializer):

@@ -1,3 +1,4 @@
+from raterprojectapi.views.gamepicture import GamePictures
 from django.conf.urls import include
 from django.urls import path
 from raterprojectapi.views import register_user, login_user
@@ -13,6 +14,7 @@ router.register(r'games', Games, 'game')
 router.register(r'categories', Categories, 'category')
 router.register(r'reviews', Reviews, 'review')
 router.register(r'ratings', Ratings, 'rating')
+router.register(r'image', GamePictures, 'image')
 
 urlpatterns = [
     path('', include(router.urls)),
