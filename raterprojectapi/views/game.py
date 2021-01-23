@@ -24,14 +24,15 @@ class Games(ViewSet):
         game.number_of_players = request.data["numberOfPlayers"]
         game.est_time_to_play = request.data["estimatedTimeToPlay"]
         game.age_recommendation = request.data["ageRecommendation"]
-        game.game_image = request.data["gameImage"]
+        # game.action_pic = request.data["gameImage"]
         game.designer = request.data["designer"]
         game.year_released = request.data["yearReleased"]
-        categories = Categories.objects.get(pk=request.data["categoryId"])
-        game.categories = categories
+
 
 
         try:
+            game.save()
+            game.categories.set(request.data["categories"])
             game.save()
             serializer = GameSerializer(game, context={'request': request})
             return Response(serializer.data)
@@ -95,7 +96,7 @@ class Games(ViewSet):
         game.est_time_to_play = request.data["estimatedTimeToPlay"]
         game.age_recommendation = request.data["ageRecommendation"]
         game.designer = request.data["designer"]
-        game.categories = request.data["categories"]
+        game.categories.set = request.data["categories"]
 
         game.save()
 
