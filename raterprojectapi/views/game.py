@@ -24,7 +24,6 @@ class Games(ViewSet):
         game.number_of_players = request.data["numberOfPlayers"]
         game.est_time_to_play = request.data["estimatedTimeToPlay"]
         game.age_recommendation = request.data["ageRecommendation"]
-        # game.action_pic = request.data["gameImage"]
         game.designer = request.data["designer"]
         game.year_released = request.data["yearReleased"]
 
