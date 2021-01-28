@@ -135,3 +135,40 @@ class GameTests(APITestCase):
         # GET GAME AGAIN TO VERIFY 404 response
         response = self.client.get(f"/games/{game.id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_game(self):
+        """
+        Ensure we can get an existing game.
+        """
+
+        # Seed the database with a game
+        game = Game()
+        game.title = "Sorry"
+        game.description = "Very fun"
+        game.year_released = 1970
+        game.designer = "Milton Bradley"
+        game.number_of_players = 4
+        game.est_time_to_play = 1
+        game.age_recommendation = 6
+        game.save()
+
+        # Make sure request is authenticated
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+
+        # Initiate request and store response
+        response = self.client.get(f"/games/{game.id}")
+
+        # Parse the JSON in the response body
+        json_response = json.loads(response.content)
+
+        # Assert that the game was retrieved
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Assert that the values are correct
+        self.assertEqual(json_response["title"], "Sorry")
+        self.assertEqual(json_response["description"], "Very fun")
+        self.assertEqual(json_response["year_released"], 1970)
+        self.assertEqual(json_response["designer"], "Milton Bradley")
+        self.assertEqual(json_response["number_of_players"], 4) 
+        self.assertEqual(json_response["est_time_to_play"], 1)
+        self.assertEqual(json_response["age_recommendation"], 6)
