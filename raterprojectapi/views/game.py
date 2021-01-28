@@ -95,7 +95,7 @@ class Games(ViewSet):
         game.est_time_to_play = request.data["estimatedTimeToPlay"]
         game.age_recommendation = request.data["ageRecommendation"]
         game.designer = request.data["designer"]
-        game.categories.set = request.data["categories"]
+        # game.categories.set = request.data["categories"]
 
         game.save()
 

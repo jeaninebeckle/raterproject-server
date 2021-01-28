@@ -1,5 +1,5 @@
 import json
-from raterprojectapi.models import Categories
+from raterprojectapi.models import Categories, Game
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -71,3 +71,45 @@ class GameTests(APITestCase):
         self.assertEqual(json_response["year_released"], 1980)
         self.assertEqual(json_response["est_time_to_play"], 1)
 
+    def test_change_game(self):
+        """
+        Ensure we can change an existing game.
+        """
+        game = Game()
+        game.title = "Sorry"
+        game.description = "Very fun"
+        game.year_released = 1970
+        game.designer = "Milton Bradley"
+        game.number_of_players = 4
+        game.est_time_to_play = 1
+        game.age_recommendation = 6
+        game.save()
+
+        # DEFINE NEW PROPERTIES FOR GAME
+        data = {
+            "title": "Sorry",
+            "description": "Actually only kind of fun",
+            "yearReleased": 1970,
+            "designer": "Hasbro",
+            "numberOfPlayers": 4,
+            "estimatedTimeToPlay": 2,
+            "ageRecommendation": 6
+        }
+
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+        response = self.client.put(f"/games/{game.id}", data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # GET GAME AGAIN TO VERIFY CHANGES
+        response = self.client.get(f"/games/{game.id}")
+        json_response = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Assert that the properties are correct
+        self.assertEqual(json_response["title"], "Sorry")
+        self.assertEqual(json_response["description"], "Actually only kind of fun")
+        self.assertEqual(json_response["year_released"], 1970)
+        self.assertEqual(json_response["designer"], "Hasbro")
+        self.assertEqual(json_response["number_of_players"], 4) 
+        self.assertEqual(json_response["est_time_to_play"], 2)
+        self.assertEqual(json_response["age_recommendation"], 6)

@@ -74,4 +74,5 @@ class RatingTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Assert that the properties on the created resource are correct
-        self.assertEqual(json_response["value"], 8)       
+        self.assertEqual(json_response["value"], 8)    
+ 
