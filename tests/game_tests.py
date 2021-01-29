@@ -1,4 +1,5 @@
 import json
+
 from raterprojectapi.models import Categories, Game
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -172,3 +173,53 @@ class GameTests(APITestCase):
         self.assertEqual(json_response["number_of_players"], 4) 
         self.assertEqual(json_response["est_time_to_play"], 1)
         self.assertEqual(json_response["age_recommendation"], 6)
+
+    def test_get_all_games(self):
+        """
+        Ensure we can get all games.
+        """
+
+        # Seed the database with a game
+        for i in range(2):
+          game = Game()
+          game.title = "Sorry"
+          game.description = "Very fun"
+          game.year_released = 1970
+          game.designer = "Milton Bradley"
+          game.number_of_players = 4
+          game.est_time_to_play = 1
+          game.age_recommendation = 6
+          game.save()
+
+        # game = Game()
+        # game.title = "Clue"
+        # game.description = "For mystery lovers and problem solvers"
+        # game.year_released = 1980
+        # game.designer = "Hasbro"
+        # game.number_of_players = 6
+        # game.est_time_to_play = 2
+        # game.age_recommendation = 10
+        # game.save()
+
+        # Make sure request is authenticated
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+
+        # Initiate request and store response
+        response = self.client.get(f"/games")
+
+        # Parse the JSON in the response body
+        json_response = json.loads(response.content)
+
+        # Assert that the game was retrieved
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Assert that the values are correct
+        for i in range(2):
+          self.assertEqual(json_response[i]["title"], "Sorry")
+          self.assertEqual(json_response[i]["description"], "Very fun")
+          self.assertEqual(json_response[i]["year_released"], 1970)
+          self.assertEqual(json_response[i]["designer"], "Milton Bradley")
+          self.assertEqual(json_response[i]["number_of_players"], 4) 
+          self.assertEqual(json_response[i]["est_time_to_play"], 1)
+          self.assertEqual(json_response[i]["age_recommendation"], 6)
+
