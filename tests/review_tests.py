@@ -1,10 +1,11 @@
 import json
+
 from raterprojectapi.models import Game, Player
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
 
-class RatingTests(APITestCase):
+class ReviewTests(APITestCase):
     def setUp(self):
         """
         Create a new account and create sample category
@@ -48,15 +49,14 @@ class RatingTests(APITestCase):
         player.user = user
         player.save()
 
-
-    def test_create_rating(self):
+    def test_create_review(self):
         """
-        Ensure we can create a new rating.
+        Ensure we can create a new review.
         """
-        # DEFINE RATING PROPERTIES
-        url = "/ratings"
+        # DEFINE REVIEW PROPERTIES
+        url = "/reviews"
         data = {
-            "value": 8,
+            "description": "Lorem ipsum",
             "gameId": 1,
             "playerId": 1,
         }
@@ -70,8 +70,9 @@ class RatingTests(APITestCase):
         # Parse the JSON in the response body
         json_response = json.loads(response.content)
 
-        # Assert that the rating was created
+        # Assert that the review was created
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Assert that the properties on the created resource are correct
-        self.assertEqual(json_response["value"], 8)    
+        self.assertEqual(json_response["description"], "Lorem ipsum")       
+
