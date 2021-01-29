@@ -57,8 +57,8 @@ class ReviewTests(APITestCase):
         url = "/reviews"
         data = {
             "description": "Lorem ipsum",
-            "gameId": 1,
-            "playerId": 1,
+            "game": 1,
+            "player": 1,
         }
 
         # Make sure request is authenticated
@@ -74,5 +74,6 @@ class ReviewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Assert that the properties on the created resource are correct
-        self.assertEqual(json_response["description"], "Lorem ipsum")       
-
+        self.assertEqual(json_response["description"], "Lorem ipsum")    
+        self.assertEqual(json_response["game"], 1)   
+        self.assertEqual(json_response["player"], 1)

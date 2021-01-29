@@ -1,5 +1,7 @@
 import json
-from raterprojectapi.models import Game, Player
+
+from django.http import request
+from raterprojectapi.models import Game, Player, Rating
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
@@ -57,8 +59,8 @@ class RatingTests(APITestCase):
         url = "/ratings"
         data = {
             "value": 8,
-            "gameId": 1,
-            "playerId": 1,
+            "game": 1,
+            "player": 1,
         }
 
         # Make sure request is authenticated
@@ -74,4 +76,37 @@ class RatingTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Assert that the properties on the created resource are correct
-        self.assertEqual(json_response["value"], 8)    
+        self.assertEqual(json_response["value"], 8)
+        self.assertEqual(json_response["game"], 1)
+        self.assertEqual(json_response["player"], 1)   
+
+    def test_change_rating(self):
+        """
+        Ensure we can change an existing rating.
+        """
+        rating = Rating()
+        rating.value = 8
+        rating.player = Player.objects.get(pk=1)
+        rating.game = Game.objects.get(pk=1)
+        rating.save()
+
+        # DEFINE NEW PROPERTIES FOR GAME
+        data = {
+            "value": 4,
+            "game": 1,
+            "player": 1
+        }
+
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+        response = self.client.put(f"/ratings/{rating.id}", data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # GET GAME AGAIN TO VERIFY CHANGES
+        response = self.client.get(f"/ratings/{rating.id}")
+        json_response = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Assert that the properties are correct
+        self.assertEqual(json_response["value"], 4)
+        self.assertEqual(json_response["game"], 1)
+        self.assertEqual(json_response["player"], 1)

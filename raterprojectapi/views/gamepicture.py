@@ -22,10 +22,10 @@ class GamePictures(ViewSet):
 
         format, imgstr = request.data["game_image"].split(';base64,')
         ext = format.split('/')[-1]
-        data = ContentFile(base64.b64decode(imgstr), name=f'{request.data["gameId"]}-{uuid.uuid4()}.{ext}')
+        data = ContentFile(base64.b64decode(imgstr), name=f'{request.data["game"]}-{uuid.uuid4()}.{ext}')
 
         game_picture.action_pic = data
-        game = Game.objects.get(pk=request.data["gameId"])
+        game = Game.objects.get(pk=request.data["game"])
         game_picture.game = game
 
         # Give the image property of your game picture instance a value
