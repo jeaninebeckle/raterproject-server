@@ -24,7 +24,7 @@ class Ratings(ViewSet):
         rating = Rating()
         rating.value = request.data["value"]
 
-        game = Game.objects.get(pk=request.data["gameId"]) 
+        game = Game.objects.get(pk=request.data["game"]) 
         rating.game = game
 
         rating.player = player
@@ -63,7 +63,24 @@ class Ratings(ViewSet):
             ratings, many=True, context={'request': request})
         return Response(serializer.data)
 
-class RatingSerializer(serializers.HyperlinkedModelSerializer):
+    def update(self, request, pk=None):
+        """Handle PUT requests for a rating
+
+        Returns:
+            Response -- Empty body with 204 status code
+        """
+        rating = Rating.objects.get(pk=pk)
+        rating.value = request.data["value"]
+        rating.game = Game.objects.get(pk=request.data["game"]) 
+        rating.player = Player.objects.get(user=request.auth.user)
+
+        rating.save()
+
+        # 204 status code means everything worked but the
+        # server is not sending back any data in the response
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+class RatingSerializer(serializers.ModelSerializer):
     """JSON serializer for reviews
 
     Arguments:
@@ -71,11 +88,7 @@ class RatingSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = Rating
-        url = serializers.HyperlinkedIdentityField(
-            view_name='review',
-            lookup_field='id'
-        )
-        fields = ('id', 'url', 'value')
+        fields = ('id', 'value', 'player', 'game')
         # depth = 1
 
 class RatingUserSerializer(serializers.ModelSerializer):

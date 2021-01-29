@@ -24,7 +24,7 @@ class Reviews(ViewSet):
         review = Review()
         review.description = request.data["description"]
 
-        game = Game.objects.get(pk=request.data["gameId"]) 
+        game = Game.objects.get(pk=request.data["game"]) 
         review.game = game
 
         review.player = player
@@ -48,26 +48,6 @@ class Reviews(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
-    # def update(self, request, pk=None):
-    #     """Handle PUT requests for a game
-
-    #     Returns:
-    #         Response -- Empty body with 204 status code
-    #     """
-    #     gamer = Player.objects.get(user=request.auth.user)
-
-    #     game = Game.objects.get(pk=pk)
-    #     game.title = request.data["title"]
-    #     game.maker = request.data["maker"]
-    #     game.number_of_players = request.data["numberOfPlayers"]
-    #     game.skill_level = request.data["skillLevel"]
-    #     game.gamer = gamer
-
-    #     category = Category.objects.get(pk=request.data["categoryId"])
-    #     game.gametype = gametype
-    #     game.save()
-
-    #     return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk=None):
         """Handle DELETE requests for a single game
@@ -99,7 +79,7 @@ class Reviews(ViewSet):
             reviews, many=True, context={'request': request})
         return Response(serializer.data)
 
-class ReviewSerializer(serializers.HyperlinkedModelSerializer):
+class ReviewSerializer(serializers.ModelSerializer):
     """JSON serializer for reviews
 
     Arguments:
@@ -107,11 +87,7 @@ class ReviewSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = Review
-        url = serializers.HyperlinkedIdentityField(
-            view_name='review',
-            lookup_field='id'
-        )
-        fields = ('id', 'url', 'description')
+        fields = ('id', 'description', 'game', 'player')
         # depth = 1
 
 class ReviewUserSerializer(serializers.ModelSerializer):
