@@ -5,7 +5,7 @@ from raterprojectapi.models import Game
 from raterprojectreports.views import Connection
 
 
-def topgamerating_list(request):
+def bottomgamerating_list(request):
     """Function to build an HTML report of games by rating"""
     if request.method == 'GET':
         # Connect to project database
@@ -24,13 +24,13 @@ def topgamerating_list(request):
                 JOIN
                     raterprojectapi_rating r ON r.game_id = g.id
                 GROUP BY g.title
-                ORDER BY average_rating DESC
+                ORDER BY average_rating ASC
                 LIMIT 5
             """)
 
             dataset = db_cursor.fetchall()
 
-            top_games_by_rating = []
+            bottom_games_by_rating = []
 
             for row in dataset:
                 # Create a Game instance and set its properties. String in brackets matches the SQL results
@@ -38,12 +38,12 @@ def topgamerating_list(request):
                 game.title = row["title"]
                 game.rating = row["average_rating"]
 
-                top_games_by_rating.append(game)
+                bottom_games_by_rating.append(game)
 
         # Specify the Django template and provide data context
-        template = 'ratings/list_with_top_ratings.html'
+        template = 'ratings/list_with_lowest_ratings.html'
         context = {
-            'topgamerating_list': top_games_by_rating
+            'bottomgamerating_list': bottom_games_by_rating
         }
 
         return render(request, template, context)
