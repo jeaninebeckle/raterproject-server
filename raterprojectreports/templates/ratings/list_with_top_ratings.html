@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Gamer Rater Reports</title>
+  </head>
+  <body>
+    <h1>Top 5 Games By Rating</h1>
+
+    {% for game in gamerating_list %}
+            {% for game in user.games %}
+            <li>
+                Title: {{ game.title }}
+            </li>
+            {% endfor %}
+  </body>
+</html>

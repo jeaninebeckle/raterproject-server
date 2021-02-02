@@ -5,7 +5,7 @@ from raterprojectapi.models import Game
 from raterprojectreports.views import Connection
 
 
-def gamerating_list(request):
+def topgamerating_list(request):
     """Function to build an HTML report of games by rating"""
     if request.method == 'GET':
         # Connect to project database
@@ -18,78 +18,50 @@ def gamerating_list(request):
                 SELECT
                     g.id,
                     g.title,
-                    g.maker,
-                    gt.label AS game_type_name,
-                    g.number_of_players,
-                    g.skill_level,
-                    u.id user_id,
-                    u.first_name || ' ' || u.last_name AS full_name
+                    AVG(r.value) AS average_rating
                 FROM
-                    levelupapi_game g
+                    raterprojectapi_game g
                 JOIN
-                    levelupapi_gamer gr ON g.gamer_id = gr.id
-                JOIN
-                    levelupapi_gametype gt ON g.gametype_id = gt.id
-                JOIN
-                    auth_user u ON gr.user_id = u.id
+                    raterprojectapi_rating r ON r.game_id = g.id
+                GROUP BY g.title
+                ORDER BY average_rating DESC
             """)
 
             dataset = db_cursor.fetchall()
 
-            # Take the flat data from the database, and build the
-            # following data structure for each gamer.
-            #
-            # {
-            #     1: {
-            #         "id": 1,
-            #         "full_name": "Admina Straytor",
-            #         "games": [
-            #             {
-            #                 "id": 1,
-            #                 "title": "Foo",
-            #                 "maker": "Bar Games",
-            #                 "skill_level": 3,
-            #                 "number_of_players": 4,
-            #                 "gametype_id": 2
-            #             }
-            #         ]
-            #     }
-            # }
-
-            games_by_user = {}
+            games_by_rating = []
 
             for row in dataset:
                 # Create a Game instance and set its properties. String in brackets matches the SQL results
                 game = Game()
                 game.title = row["title"]
-                game.maker = row["maker"]
-                game.skill_level = row["skill_level"]
-                game.number_of_players = row["number_of_players"]
-                game.gametype_label = row["game_type_name"]
+                game.rating = row["average_rating"]
 
-                # Store the user's id
-                uid = row["user_id"]
+                games_by_rating.append(game)
 
-                # If the user's id is already a key in the dictionary...
-                if uid in games_by_user:
+        #         # Store the user's id
+        #         uid = row["user_id"]
 
-                    # Add the current game to the `games` list for it
-                    games_by_user[uid]['games'].append(game)
+        #         # If the user's id is already a key in the dictionary...
+        #         if uid in games_by_user:
 
-                else:
-                    # Otherwise, create the key and dictionary value
-                    games_by_user[uid] = {}
-                    games_by_user[uid]["id"] = uid
-                    games_by_user[uid]["full_name"] = row["full_name"]
-                    games_by_user[uid]["games"] = [game]
+        #             # Add the current game to the `games` list for it
+        #             games_by_user[uid]['games'].append(game)
 
-        # Get only the values from the dictionary and create a list from them
-        list_of_users_with_games = games_by_user.values()
+        #         else:
+        #             # Otherwise, create the key and dictionary value
+        #             games_by_user[uid] = {}
+        #             games_by_user[uid]["id"] = uid
+        #             games_by_user[uid]["full_name"] = row["full_name"]
+        #             games_by_user[uid]["games"] = [game]
+
+        # # Get only the values from the dictionary and create a list from them
+        # list_of_top_games_by_rating = games_by_user.values()
 
         # Specify the Django template and provide data context
-        template = 'users/list_with_games.html'
+        template = 'ratings/list_with_top_ratings.html'
         context = {
-            'usergame_list': list_of_users_with_games
+            'gamerating_list': games_by_rating
         }
 
         return render(request, template, context)

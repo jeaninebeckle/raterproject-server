@@ -1,0 +1,1 @@
+from .topgamesbyrating import topgamerating_list
