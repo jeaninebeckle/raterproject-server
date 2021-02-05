@@ -1,0 +1,2 @@
+from .topgamesbyrating import topgamerating_list
+from .bottomgamesbyrating import bottomgamerating_list

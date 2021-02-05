@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Gamer Rater Reports</title>
+  </head>
+  <body>
+    <h1>Games For Kids Younger Than 8</h1>
+
+    {% for game in suitableforkids_list %}
+
+            <ul>
+                Title: {{ game.title }} <br>
+                Age Recommendation: {{ game.age_recommendation }}
+            </ul>
+            {% endfor %}
+  </body>
+</html>
