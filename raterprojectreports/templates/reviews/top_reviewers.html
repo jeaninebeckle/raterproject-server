@@ -6,13 +6,13 @@
     <title>Gamer Rater Reports</title>
   </head>
   <body>
-    <h1>The Most-Reviewed Game</h1>
+    <h1>The Top Reviewers by Count</h1>
 
-    {% for game in mostreviewedgametitle %}
+    {% for review in topreviewers_count %}
 
             <ul>
-                Title: {{ game.title }} <br>
-                Number of Reviews: {{ game.review }}
+                Username: {{ review.username }} <br>
+                Number of Reviews: {{ review.count }}
             </ul>
             {% endfor %}
   </body>

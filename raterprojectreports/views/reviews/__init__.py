@@ -1,1 +1,2 @@
-from .mostreviewedgame import mostreviewedgame
+from .mostreviewedgame import mostreviewedgametitle
+from .topreviewers import topreviewers_count

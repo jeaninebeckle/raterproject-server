@@ -4,8 +4,7 @@ from raterprojectapi.models import Game
 from raterprojectreports.views import Connection
 
 
-def mostreviewedgametitle(request):
-    """Function to build an HTML report of games by rating"""
+def gameswithoutimages(request):
     if request.method == 'GET':
         # Connect to project database
         with sqlite3.connect(Connection.db_path) as conn:
@@ -14,32 +13,27 @@ def mostreviewedgametitle(request):
 
             # Query for all games, with related rating info.
             db_cursor.execute("""
-                SELECT 
-                  g.title,
-                  COUNT(g.id) as number
+              SELECT 
+                COUNT(g.title) as number
                 FROM raterprojectapi_game g
-                JOIN raterprojectapi_review r ON r.game_id = g.id
-                GROUP BY g.id
-                ORDER BY COUNT(g.id) DESC
-                LIMIT 1
+                LEFT JOIN raterprojectapi_gamepicture p on g.id = p.game_id
+                WHERE p.game_id is null
             """)
 
             dataset = db_cursor.fetchall()
 
-            most_reviewed_game = []
+            games_without_images = []
 
             for row in dataset:
                 # Create a Game instance and set its properties. String in brackets matches the SQL results
                 game = Game()
-                game.title = row["title"]
-                game.review = row["number"]
-
-                most_reviewed_game.append(game)
+                game.count = row["number"]
+                games_without_images.append(game)
 
         # Specify the Django template and provide data context
-        template = 'reviews/most_reviewed_game.html'
+        template = 'images/number_games_no_images.html'
         context = {
-            'mostreviewedgametitle': most_reviewed_game
+            'gameswithoutimages': games_without_images
         }
 
         return render(request, template, context)
